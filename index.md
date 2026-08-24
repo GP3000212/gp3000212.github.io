@@ -1,4 +1,4 @@
-# Welcome to My Portfolio Hello! My name is [Your Alias or Initials].
+# Welcome to My Portfolio Hello! My name is Gab.
 ## Projects
 - Project 1: Description
 - Project 2: Description
