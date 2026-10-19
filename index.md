@@ -1,6 +1,6 @@
 # Welcome to My Portfolio Hello! My name is Gab.
 ## Projects
-- Project 1: Description
+- Project 1: [Project Prototype](ProjectPrototype.java)
 - Project 2: Description
 ## About Me
 Click here to learn more → [About Me](about.md)
