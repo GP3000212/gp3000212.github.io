@@ -1,7 +1,7 @@
 # Welcome to My Portfolio Hello! My name is Gab.
 ## Projects
 - Project 1: [Project Prototype](ProjectPrototype.java)
-- Project 2: Description
+- Project 2: [First Array for 7.2.6](FirstArray.java)
 ## About Me
 Click here to learn more → [About Me](about.md)
 
