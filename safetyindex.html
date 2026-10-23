@@ -1,0 +1,530 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f7f2">
+  <title>Safety, Law, Ethics | Software Laws Quiz</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #182b28;
+      --muted: #62716c;
+      --green: #176b55;
+      --green-dark: #105340;
+      --mint: #e5f2eb;
+      --paper: #ffffff;
+      --canvas: #f5f7f2;
+      --line: #dce5df;
+      --good: #176b43;
+      --bad: #a13931;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      min-width: 320px;
+      min-height: 100vh;
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(ellipse at 88% 8%, rgba(214, 235, 219, .65), transparent 32rem),
+        var(--canvas);
+    }
+
+    button, input { font: inherit; }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 26px 28px;
+    }
+
+    .top-note {
+      color: var(--muted);
+      font-size: .85rem;
+      font-weight: 600;
+    }
+
+    main {
+      width: min(100% - 32px, 720px);
+      margin: 34px auto 72px;
+    }
+
+    .intro { margin-bottom: 26px; }
+
+    .eyebrow {
+      margin: 0 0 10px;
+      color: var(--green);
+      font-size: .76rem;
+      font-weight: 800;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 6vw, 3.2rem);
+      letter-spacing: -.065em;
+      line-height: 1.08;
+    }
+
+    .intro-copy {
+      max-width: 560px;
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-size: 1.02rem;
+      line-height: 1.65;
+    }
+
+    .quiz-card {
+      overflow: hidden;
+      border: 1px solid rgba(24, 43, 40, .08);
+      border-radius: 22px;
+      background: var(--paper);
+      box-shadow: 0 18px 55px rgba(25, 48, 39, .08);
+    }
+
+    .quiz-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 23px 28px 18px;
+    }
+
+    .question-count {
+      font-size: .9rem;
+      font-weight: 750;
+    }
+
+    .score-pill {
+      padding: 7px 11px;
+      border-radius: 999px;
+      color: var(--green-dark);
+      background: var(--mint);
+      font-size: .78rem;
+      font-weight: 750;
+    }
+
+    .progress-track {
+      height: 5px;
+      margin: 0 28px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #edf1ed;
+    }
+
+    .progress-fill {
+      width: 0;
+      height: 100%;
+      border-radius: inherit;
+      background: var(--green);
+      transition: width .25s ease;
+    }
+
+    form { padding: 23px 28px 28px; }
+
+    fieldset {
+      min-width: 0;
+      margin: 0;
+      padding: 0;
+      border: 0;
+    }
+
+    legend {
+      width: 100%;
+      margin: 0 0 19px;
+      font-size: clamp(1.15rem, 3vw, 1.4rem);
+      font-weight: 750;
+      letter-spacing: -.03em;
+      line-height: 1.4;
+    }
+
+    .answers {
+      display: grid;
+      gap: 10px;
+    }
+
+    .answer {
+      position: relative;
+      display: flex;
+      align-items: flex-start;
+      gap: 13px;
+      padding: 14px 15px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: white;
+      cursor: pointer;
+      transition: border-color .15s ease, background .15s ease, transform .15s ease;
+    }
+
+    .answer:hover {
+      transform: translateY(-1px);
+      border-color: #9ebdac;
+      background: #fbfdfb;
+    }
+
+    .answer.is-selected {
+      border-color: var(--green);
+      background: #f1f8f3;
+    }
+
+    .answer.is-focused {
+      outline: 3px solid rgba(23, 107, 85, .25);
+      outline-offset: 2px;
+    }
+
+    .answer input {
+      width: 18px;
+      height: 18px;
+      flex: 0 0 auto;
+      margin: 1px 0 0;
+      accent-color: var(--green);
+    }
+
+    .answer-text {
+      font-size: .96rem;
+      line-height: 1.5;
+    }
+
+    .feedback {
+      min-height: 25px;
+      margin: 14px 0 0;
+      font-size: .9rem;
+      font-weight: 650;
+      line-height: 1.5;
+    }
+
+    .feedback.good { color: var(--good); }
+    .feedback.bad { color: var(--bad); }
+
+    .actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .button {
+      min-height: 46px;
+      padding: 0 19px;
+      border: 0;
+      border-radius: 11px;
+      cursor: pointer;
+      font-size: .92rem;
+      font-weight: 750;
+      transition: background .15s ease, transform .15s ease;
+    }
+
+    .button:hover { transform: translateY(-1px); }
+
+    .button-primary {
+      color: white;
+      background: var(--green);
+    }
+
+    .button-primary:hover { background: var(--green-dark); }
+
+    .button-secondary {
+      color: var(--green-dark);
+      background: var(--mint);
+    }
+
+    .button-secondary:hover { background: #d6eadd; }
+
+    .button:focus-visible {
+      outline: 3px solid rgba(23, 107, 85, .35);
+      outline-offset: 3px;
+    }
+
+    .result {
+      padding: 42px 30px;
+      text-align: center;
+    }
+
+    .result-icon {
+      display: grid;
+      width: 62px;
+      height: 62px;
+      margin: 0 auto 17px;
+      place-items: center;
+      border-radius: 20px;
+      color: var(--green-dark);
+      background: var(--mint);
+      font-size: 1.7rem;
+    }
+
+    .result h2 {
+      margin: 0;
+      font-size: 1.8rem;
+      letter-spacing: -.05em;
+    }
+
+    .result p {
+      margin: 9px 0 22px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .sources {
+      margin: 24px 4px 0;
+      padding: 18px 20px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--paper);
+    }
+
+    .sources h2 {
+      margin: 0 0 8px;
+      font-size: 1rem;
+    }
+
+    .sources ol {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      padding-left: 22px;
+      color: var(--muted);
+      font-size: .88rem;
+      line-height: 1.55;
+    }
+
+    .sources a {
+      color: var(--green-dark);
+      overflow-wrap: anywhere;
+    }
+
+    [hidden] { display: none !important; }
+
+    @media (max-width: 520px) {
+      .topbar { padding: 19px 20px; }
+      .top-note { font-size: .75rem; }
+      main { width: min(100% - 22px, 720px); margin-top: 25px; }
+      .quiz-top { padding: 19px 19px 15px; }
+      .progress-track { margin: 0 19px; }
+      form { padding: 20px 19px 22px; }
+      .answer { padding: 13px 12px; }
+      .actions .button { flex: 1; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <span class="top-note">A safer trip starts here</span>
+  </header>
+
+  <main>
+    <section class="intro" aria-labelledby="page-title">
+      <p class="eyebrow">Quick knowledge check</p>
+      <h1 id="page-title">Know the rules.<br>Stay safe online.</h1>
+      <p class="intro-copy">Take this five-question quiz on software ethics and regulations. Choose the best answer for each question and see your score at the end.</p>
+    </section>
+
+    <section class="quiz-card" aria-label="Software Laws Quiz">
+      <div id="quiz">
+        <div class="quiz-top">
+          <span class="question-count" id="question-count">Question 1 of 5</span>
+          <span class="score-pill" id="score-pill">0 correct</span>
+        </div>
+        <div class="progress-track" role="progressbar" aria-label="Quiz progress" aria-valuemin="0" aria-valuemax="5" aria-valuenow="0">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+        <form id="question-form">
+          <fieldset>
+            <legend id="question"></legend>
+            <div class="answers" id="answers"></div>
+          </fieldset>
+          <p class="feedback" id="feedback" aria-live="polite"></p>
+          <div class="actions">
+            <button class="button button-primary" id="submit-button" type="submit">Check answer</button>
+            <button class="button button-primary" id="next-button" type="button" hidden>Next question</button>
+          </div>
+        </form>
+      </div>
+      <div class="result" id="result" role="status" hidden>
+        <div class="result-icon" aria-hidden="true">✓</div>
+        <h2 id="result-title">Quiz complete!</h2>
+        <p id="result-copy"></p>
+        <button class="button button-secondary" id="restart-button" type="button">Try again</button>
+      </div>
+    </section>
+    <section class="sources" aria-labelledby="sources-title">
+      <h2 id="sources-title">Sources</h2>
+      <ol>
+        <li><a href="https://washu.edu/policies/guide-to-legal-and-ethical-use-of-software/" target="_blank" rel="noopener noreferrer">Washington University in St. Louis, “Guide to Legal and Ethical Use of Software”</a></li>
+        <li><a href="https://www.ebsco.com/research-starters/computer-science/software-regulations/" target="_blank" rel="noopener noreferrer">EBSCO Research Starters, “Software Regulations”</a></li>
+      </ol>
+    </section>
+  </main>
+
+  <script>
+    const questions = [
+      {
+        text: "What are the main classifications of Software?",
+        options: [
+          "Commercial, Shareware, Freeware, Public Domain",
+          "Public Domain, Private Domain",
+          "Hardware, Software, Mediumware"
+        ],
+        answer: 0
+      },
+      {
+        text: "What is a true statement?",
+        options: [
+          "I can get a legal copy of software without the holder's permission.",
+          "I have the right to copy a website when there is no copyright protection.",
+          "All intellectual property, including software, is covered by copyright unless explicitly noted."
+        ],
+        answer: 2
+      },
+      {
+        text: "What does the HIPAA act do for software regulation?",
+        options: [
+          "It requires software to handle personal health information ethically and securely.",
+          "It makes health information more widely available.",
+          "It requires health information to be updated immediately when a new discovery is made."
+        ],
+        answer: 0
+      },
+      {
+        text: "Until when were computer programs able to be effectively copyrighted?",
+        options: [
+          "Late 1980s",
+          "Early 1980s",
+          "Late 1990s"
+        ],
+        answer: 1
+      },
+      {
+        text: "Open-source is another classification for software. What is the MAIN thing people are able to do with it?",
+        options: [
+          "Allow users to delete the code.",
+          "Allow users to alter, distribute, and access code.",
+          "Allow users to use the code to teach."
+        ],
+        answer: 1
+      }
+    ];
+
+    const form = document.querySelector("#question-form");
+    const questionElement = document.querySelector("#question");
+    const answersElement = document.querySelector("#answers");
+    const feedbackElement = document.querySelector("#feedback");
+    const questionCountElement = document.querySelector("#question-count");
+    const scorePill = document.querySelector("#score-pill");
+    const progress = document.querySelector(".progress-track");
+    const progressFill = document.querySelector("#progress-fill");
+    const submitButton = document.querySelector("#submit-button");
+    const nextButton = document.querySelector("#next-button");
+    const quizElement = document.querySelector("#quiz");
+    const resultElement = document.querySelector("#result");
+
+    let currentQuestion = 0;
+    let score = 0;
+    let answered = false;
+
+    function renderQuestion() {
+      const item = questions[currentQuestion];
+      questionCountElement.textContent = `Question ${currentQuestion + 1} of ${questions.length}`;
+      questionElement.textContent = item.text;
+      answersElement.replaceChildren();
+      feedbackElement.textContent = "";
+      feedbackElement.className = "feedback";
+      answered = false;
+      submitButton.hidden = false;
+      nextButton.hidden = true;
+
+      item.options.forEach((option, index) => {
+        const label = document.createElement("label");
+        label.className = "answer";
+        const input = document.createElement("input");
+        input.type = "radio";
+        input.name = "answer";
+        input.value = String(index);
+        input.required = true;
+
+        const syncState = () => {
+          label.classList.toggle("is-selected", input.checked);
+          label.classList.toggle("is-focused", document.activeElement === input);
+        };
+
+        input.addEventListener("change", syncState);
+        input.addEventListener("focus", syncState);
+        input.addEventListener("blur", () => label.classList.remove("is-focused"));
+
+        const text = document.createElement("span");
+        text.className = "answer-text";
+        text.textContent = option;
+        label.append(input, text);
+        answersElement.append(label);
+      });
+    }
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      if (answered) return;
+
+      const selected = form.querySelector('input[name="answer"]:checked');
+      if (!selected) {
+        feedbackElement.textContent = "Choose an answer to continue.";
+        feedbackElement.className = "feedback bad";
+        return;
+      }
+
+      answered = true;
+      const item = questions[currentQuestion];
+      const isCorrect = Number(selected.value) === item.answer;
+      if (isCorrect) score += 1;
+      scorePill.textContent = `${score} correct`;
+      feedbackElement.textContent = isCorrect ? "That’s right!" : "Not quite.";
+      feedbackElement.className = `feedback ${isCorrect ? "good" : "bad"}`;
+      form.querySelectorAll('input[name="answer"]').forEach((input) => {
+        input.disabled = true;
+      });
+      progress.setAttribute("aria-valuenow", String(currentQuestion + 1));
+      progressFill.style.width = `${((currentQuestion + 1) / questions.length) * 100}%`;
+      submitButton.hidden = true;
+      nextButton.hidden = false;
+      nextButton.textContent = currentQuestion === questions.length - 1 ? "See results" : "Next question";
+      nextButton.focus();
+    });
+
+    nextButton.addEventListener("click", () => {
+      currentQuestion += 1;
+      if (currentQuestion < questions.length) {
+        renderQuestion();
+        questionElement.focus();
+        return;
+      }
+
+      quizElement.hidden = true;
+      resultElement.hidden = false;
+      const percentage = Math.round((score / questions.length) * 100);
+      document.querySelector("#result-title").textContent =
+        score === questions.length ? "Perfect score!" : "Quiz complete!";
+      document.querySelector("#result-copy").textContent =
+        `You got ${score} out of ${questions.length} correct (${percentage}%). Keep practicing safe habits on every trip.`;
+      document.querySelector("#restart-button").focus();
+    });
+
+    document.querySelector("#restart-button").addEventListener("click", () => {
+      currentQuestion = 0;
+      score = 0;
+      scorePill.textContent = "0 correct";
+      progress.setAttribute("aria-valuenow", "0");
+      progressFill.style.width = "0";
+      resultElement.hidden = true;
+      quizElement.hidden = false;
+      renderQuestion();
+      questionElement.focus();
+    });
+
+    renderQuestion();
+  </script>
+</body>
+</html>
